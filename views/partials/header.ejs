@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0"/>
+        
+        <title>Progcont Q&A</title>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"></link>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"></link>
+        <link href="/stylesheets/landing.css" rel="stylesheet"></link>
+        
+        <script src="//code.jquery.com/jquery.min.js"></script>
+    </head>
+    
+    <body>
+        
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <% if (currentUser) { %>
+                    <a href="/questions" class="navbar-brand">Progcont Questions&Answers</a>
+                <% } else { %>
+                    <a href="/" class="navbar-brand">Progcont Questions&Answers</a>
+                <% } %>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="nav navbar-nav navbar-left" style="padding-left: 5%">
+                    <% if (currentUser) { %>
+	                    <li><a href="/questions/new">New</a></li>
+	                    <li><a href="/questions/solved">Solved</a></li>
+	                    <li><a href="/questions/deleted">QBin</a></li>
+	                    <li><a href="/questions">Questions</a></li>
+	                    <% if (currentUser.role == "ADMIN") { %>
+	                    	 <li><a href="/roles">Roles</a></li>
+	                    <% } %>
+                    <% } %>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <% if (!currentUser){ %>
+                    	<li><a href="/register">Sign Up</a></li>
+                        <li><a href="/">Login</a></li>
+                    <% } else { %>
+                        <li><a href="javascript;">Signed in as <%= currentUser.username %></a></li>
+                        <li><a href="/logout">Logout</a></li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <% if (error && error.length > 0) { %>
+        <div class="alert alert-danger" role="alert">
+            <%= error %>
+        </div>
+        <% } else if (success && success.length > 0){ %>
+        <div class="alert alert-success" role="alert">
+            <%= success %>
+        </div>
+        <% } %>
+    </div>

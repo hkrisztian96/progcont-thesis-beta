@@ -1,0 +1,29 @@
+        <script type="text/javascript">
+            var url = window.location.href;
+            var arr = url.split("/");
+            url = arr[arr.length-1];
+            $('a[href="/'+ url +'"]').addClass('active');
+            $('a[href="/questions/'+ url +'"]').addClass('active');
+        </script>
+        <script type="text/javascript">
+		    // Auto-Grow-TextArea script.
+		    // Script copyright (C) 2011 www.cryer.co.uk.
+		    // Script is free to use provided this copyright header is included.
+		    var textField = document.getElementById("code");
+		    function AutoGrowTextArea(textField)
+		    {
+		      if (textField.clientHeight < textField.scrollHeight)
+		      {
+		        textField.style.height = textField.scrollHeight + "px";
+		        if (textField.clientHeight < textField.scrollHeight)
+		        {
+		          textField.style.height =
+		            (textField.scrollHeight * 2 - textField.clientHeight) + "px";
+		        }
+		      }
+		    }
+		 </script>
+         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+         <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+      </body>
+</html>

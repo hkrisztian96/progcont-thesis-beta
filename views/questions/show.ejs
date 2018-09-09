@@ -1,0 +1,63 @@
+<% include ../partials/header %>
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1 centered">
+            <div class="thumbnail">
+                <div class="caption-full">
+                    <h4 style="font-size: 30px;" class="text-<% if (question.expiration_date == null) { %>primary<% } else { %>danger<% } %> text-center"><p><%=question.questionString%></p></h4>
+                    <p>Progcont Link: <a href="<%= question.link %>"><%= question.link %></a></p>
+                    <% if (question.code != "") { %>
+                    <pre class="prettyprint">
+                    	<code><%= question.code %></code>
+                    </pre>
+                    <% } %>
+                    <p>
+                        <em>Submitted by <%= question.author.username %></em>
+                    </p>
+                    <% if (currentUser && question.author.id.equals(currentUser._id)){ %>
+                    	<% if (question.expiration_date == null && question.isSolved == false) { %>
+                        	<a class="btn btn-xs btn-warning" href="/questions/<%= question._id %>/edit">Edit</a>
+                        	<form id="delete-form" action="/questions/<%= question._id %>?_method=DELETE" method="POST">
+                            	<button class="btn btn-xs btn-danger">Delete</button>
+                        	</form>
+                        	<form id="delete-form" action="/questions/<%= question._id %>/solved?_method=PUT" method="POST">
+                            	<button class="btn btn-xs btn-success" style="float: right;">Mark as solved</button>
+                        	</form>
+                        <% } else { %>
+                        	<form id="restore-form" action="/questions/<% if (question.isSolved == true) { %>solved<% } else { %>deleted<% } %>/<%= question._id %>/restore?_method=PUT" method="POST">
+                            	<button class="btn btn-xs btn-success">Restore</button>
+                        	</form>
+                       	<% } %>
+                    <% } %>
+                </div>
+            </div>
+	        <div class="well">
+	        	<% if (question.expiration_date == null && question.isSolved == false) { %>
+    		    	<div class="text-right">
+		    	        <a class="btn btn-success" href="/questions/<%= question._id %>/comments/new">Add New Comment</a>
+		            </div>
+	            <% } %>
+	            <hr>
+	            <% question.comments.forEach(function(comment){ %>
+                    <div class="row">
+   		                 <div class="col-md-12" style="padding-top: 3%">
+	  	                      <strong><%= comment.author.username %></strong>
+	                          <span class="pull-right"><%= today.diff(comment.date, "days") %> days ago</span>
+	                          <p>
+	  		                        <%= comment.text %> 
+	                          </p>
+	                          <% if (currentUser && comment.author.id.equals(currentUser._id)){ %>
+		                         <a class="btn btn-xs btn-warning" href="/questions/<%= question._id %>/comments/<%= comment._id %>/edit">Edit</a>
+	                             <form id="delete-comment" action="/questions/<%= question._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">                                   
+	                             	<button class="btn btn-xs btn-danger">Delete</button>
+                                 </form>
+	                          <% } %>
+	                     </div>
+	                </div>
+	            <% }) %>
+	        </div>
+        </div>
+    </div>
+</div>
+
+<% include ../partials/footer %>

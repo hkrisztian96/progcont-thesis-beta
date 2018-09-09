@@ -1,0 +1,21 @@
+<% include ../partials/header %>
+
+<div class="container" style="padding-top: 15%;">
+    <div class="row">
+        <h1 style="text-align: center;">Add New Comment to <%= question.name %></h1>
+        <div style="width: 30%; margin: 25px auto;">
+            <form action="/questions/<%= question._id %>/comments" method="POST">
+                <div class="form-group">
+                    <textarea name="comment[text]" class="form-control" required></textarea>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block">Submit</button>
+                </div>
+            </form>
+             <a href="/questions">Go Back</a>
+        </div>
+    </div>
+</div>
+
+
+<% include ../partials/footer %>

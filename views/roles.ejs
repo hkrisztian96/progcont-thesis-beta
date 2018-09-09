@@ -1,0 +1,44 @@
+<% include partials/header %>
+
+<div>
+        
+
+		<div class="row omb_row-sm-offset-3 col-sm-8">
+			<div class="col-xs-12">	
+					<table class="table table-responsive table-hover">
+						<thead>
+						<tr>
+						  <th>Username</th>
+						  <th>Points</th>
+						  <th>Role</th>
+						</tr>
+						</thead>
+						<tbody>
+						<% users.forEach(function(user, i) { %>
+							<tr>
+						  		<td class="align-middle"><%= user.username %></td>
+						  		<td class="align-middle"><%= user.points %></td>
+						  		<td class="align-middle"><select form="role_form-<%= i %>" class="form-control input-sm" name="user[role]">
+						  			<option value="ADMIN" <% if (user.role == "ADMIN") { %> selected <% } %> >ADMIN</option>
+						  			<option value="USER" <% if (user.role == "USER") { %> selected <% } %> >USER</option>
+						  		</select>
+						  		</td>
+						  		<td class="align-middle">
+						  			<form id="role_form-<%= i %>" class="omb_loginForm" action="/roles/<%= user._id %>?_method=PUT" autocomplete="off" method="POST">
+						  			<button id="roleButton" class="btn btn-sm btn-primary" style="float: right;" type="submit">Submit</button></form>
+						  		</td>
+							</tr>
+						<% }); %>
+						</tbody>
+					</table>
+
+			</div>
+    	</div>
+	</div>
+
+
+</div>
+
+
+
+<% include partials/footer %>

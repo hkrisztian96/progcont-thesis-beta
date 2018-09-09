@@ -1,0 +1,22 @@
+<% include ../partials/header %>
+
+<div class="container">
+    
+    <div class="row text-center">
+        <% questions.forEach(function(question){ %>
+            <div class="col-md-3 col-sm-6">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h4 class="text-danger"><%= question.questionString %></h4>
+                    </div>
+                    <p>
+                        <a href="/questions/<%= question._id %>" class="btn btn-danger">More Info</a>
+                    </p>
+                </div>
+                
+            </div>
+        <% }); %>
+    </div>
+</div>
+
+<% include ../partials/footer %>
