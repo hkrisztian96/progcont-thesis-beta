@@ -122,3 +122,18 @@ h1 {
 .table > tbody > tr > td {
      vertical-align: middle;
 }
+
+.comment-btn-margin {
+	margin-bottom: 5px;
+}
+
+.days-ago {
+	margin-top: 0.5%;
+	font-size: x-small;
+	font-style: italic;
+}
+
+.glyphicon {
+    font-size: 160%;
+    padding-right: 2%;
+}

@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router({mergeParams: true});
 var Question = require("../models/question");
 var Comment = require("../models/comment");
+var User = require("../models/user");
 var middleware = require("../middleware/index");
 var moment = require("moment");
 
@@ -62,11 +63,42 @@ router.put("/:comment_id", middleware.checkCommentOwnership, function(req, res){
     Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updatedComment){
         if (err){
             res.redirect("back");
+            req.flash("error", "Something went wrong while updating your comment");
         } else {
             req.flash("success", "Successfully edited comment");
             res.redirect("/questions/" + req.params.id);
         }
     });
+});
+
+
+//COMMENTS ACCEPT
+router.put("/:comment_id/accept", middleware.checkQuestionOwnership, middleware.isCommentAccepted, function(req, res){
+  Comment.findByIdAndUpdate(req.params.comment_id, {isAccepted: true}, function(err, updatedComment){
+      if (err){
+          res.redirect("back");
+      } else {
+    	  if (!req.user._id.equals(updatedComment.author.id)) { // points given only if it isn't the questioner's own comment
+    		  // found comment author's points
+	    	  var points;
+	    	  User.findById(updatedComment.author.id, function(err, foundUser){
+	    		  if (err){
+	    	            req.flash("error", "Something went wrong :(");
+	    	            return;
+	    	      } else {
+	    	            points = foundUser.points;
+	    		    	// increase comment author's points
+	    		    	User.findByIdAndUpdate(updatedComment.author.id, {points: ++points}, function(err, updatedUser){
+	    		    		if (err) 
+	    		    			req.flash("error", "Something went wrong :(");
+	    		    	});
+	    	      }
+	    	  });
+    	  }
+    	  req.flash("success", "Successfully accepted comment");
+          res.redirect("/questions/" + req.params.id);
+      }
+  });
 });
 
 //COMMENTS DESTROY

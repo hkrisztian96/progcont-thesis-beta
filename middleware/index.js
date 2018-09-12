@@ -93,4 +93,17 @@ middlewareObj.isSolved = function(req, res, next){
 	});	
 }
 
+middlewareObj.isCommentAccepted = function(req, res, next){
+	Comment.findById(req.params.comment_id, function(err, foundComment){
+		if (err) {
+			req.flash("error", "Something went wrong :(");
+		} else {
+			if (foundComment.isAccepted == false)
+				return next();
+			req.flash("error", "This comment is already marked as accepted");
+			res.redirect("back");
+		}
+	});
+}
+
 module.exports = middlewareObj;
