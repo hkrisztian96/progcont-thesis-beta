@@ -1,0 +1,21 @@
+<span class="pull-right">
+	<span class="text-muted days-ago"> <%= today.diff(comment.date, "days") %> days ago </span>
+	<% if (!comment.author.id.equals(currentUser._id)) { %>
+		<% if (comment.upvoters.indexOf(currentUser._id) == -1) { %>
+			<a href="/questions/<%= question._id %>/comments/<%= comment._id %>/upvote" style="display: block;"><i class="glyphicon glyphicon-chevron-up pull-right" style="color: #b3e6b3;"></i></a>
+		<% } else { %>
+			<a href="/questions/<%= question._id %>/comments/<%= comment._id %>/unupvote" style="display: block;"><i class="glyphicon glyphicon-chevron-up pull-right" style="color: green;"></i></a>
+		<% } %>		
+	<% } %>
+	<p class="text-right<% if (comment.upvoters.length - comment.downvoters.length >= 0) { %> text-success<% } else { %> text-danger<% } %>" style="padding-top: 70%; padding-right: 4%;">
+	<% if (comment.upvoters.length - comment.downvoters.length >= 0)  { %> + <% } else { %> - <% } %>
+		<%= Math.abs(comment.upvoters.length - comment.downvoters.length) %>
+	</p>
+	<% if (!comment.author.id.equals(currentUser._id)) { %>
+		<% if (comment.downvoters.indexOf(currentUser._id) == -1) { %>
+			<a href="/questions/<%= question._id %>/comments/<%= comment._id %>/downvote" style="display: block;"><i class="glyphicon glyphicon-chevron-down pull-right" style="color: #ffb3b3;"></i></a>
+		<% } else { %>
+			<a href="/questions/<%= question._id %>/comments/<%= comment._id %>/undownvote" style="display: block;"><i class="glyphicon glyphicon-chevron-down pull-right" style="color: red;"></i></a>	
+		<% } %>	
+	<% } %>
+</span>

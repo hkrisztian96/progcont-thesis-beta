@@ -1,4 +1,6 @@
 <% include ../partials/header %>
+
+
 <div class="container">
     <div class="row">
         <div class="col-md-10 col-md-offset-1 centered">
@@ -38,21 +40,21 @@
 		            </div>
 	            <% } %>
 	            <hr>
-	            <% question.comments.sort(function (a, b) { return b.isAccepted - a.isAccepted }); %>
+	            <% question.comments.sort(function (a, b) { 
+	            	if (b.isAccepted - a.isAccepted != 0)
+	            		return b.isAccepted - a.isAccepted;
+	            	else 
+	            		return (b.upvoters.length - b.downvoters.length) - (a.upvoters.length - a.downvoters.length);
+	             }); %>
 	            <% question.comments.forEach(function(comment){ %>  
                     <div class="row <% if (comment.isAccepted) { %> bg-success <% } %>">
    		                 <div class="col-md-12" style="padding-top: 0.5%">
-   		                 	  <span class="pull-right">
-   		                 	  	<span class="text-muted days-ago"> <%= today.diff(comment.date, "days") %> days ago </span>
-   		                 	  	<p><i class="glyphicon glyphicon-chevron-up pull-right" style="color: green;"></i></p>
-							  	<p class="text-right" style="padding-top: 47%; padding-right: 4%;">100</p>
-   		                 	  	<p><i class="glyphicon glyphicon-chevron-down pull-right" style="color: red;"></i></p>
-   		                 	  </span>
-	  	                      <strong><%= comment.author.username %></strong>
-	                          <p>
+   		                 	  <% include ../comments/voting %>
+	  	                      <strong style="padding-top: 1%;"><%= comment.author.username %></strong>
+	                          <p style="padding-top: 1%;">
 	  		                        <%= comment.text %>
 	                          </p>
-	                          <% if (question.author.id.equals(currentUser._id)) { %>
+	                          <% if (question.author.id.equals(currentUser._id) && comment.isAccepted == false) { %>
 	                          	<form id="accept-comment" action="/questions/<%= question._id %>/comments/<%= comment._id %>/accept?_method=PUT" method="POST">                                   
 	                             	<span class="pull-left" style="margin-right: 4px;"><button class="comment-btn-margin btn btn-xs btn-success">Accept</button></span>
                                  </form>
@@ -70,5 +72,6 @@
         </div>
     </div>
 </div>
+
 
 <% include ../partials/footer %>

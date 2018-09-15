@@ -11,7 +11,7 @@ router.get("/new", middleware.isLoggedIn, function(req, res){
     // find question by id
     Question.findById(req.params.id, function(err, question){
         if(err){
-            console.log(err);
+        	req.flash("error", "Oops... Something went wrong");
         } else {
              res.render("comments/new", {question: question});
         }
@@ -24,7 +24,6 @@ router.post("/", middleware.isLoggedIn, middleware.isDeleted, middleware.isSolve
    Question.findById(req.params.id, function(err, question){
        if(err){
            req.flash("error", "Oops... Something went wrong");
-           console.log(err);
            res.redirect("/questions");
        } else {
         Comment.create(req.body.comment, function(err, comment){
@@ -34,6 +33,7 @@ router.post("/", middleware.isLoggedIn, middleware.isDeleted, middleware.isSolve
                //add username and id to comments and then save
                comment.author.id = req.user._id;
                comment.author.username = req.user.username;
+               comment.isAccepted = false;
                comment.date = moment();
                comment.save();
                
@@ -76,6 +76,7 @@ router.put("/:comment_id", middleware.checkCommentOwnership, function(req, res){
 router.put("/:comment_id/accept", middleware.checkQuestionOwnership, middleware.isCommentAccepted, function(req, res){
   Comment.findByIdAndUpdate(req.params.comment_id, {isAccepted: true}, function(err, updatedComment){
       if (err){
+    	  req.flash("error", "Oops... Something went wrong :(");
           res.redirect("back");
       } else {
     	  if (!req.user._id.equals(updatedComment.author.id)) { // points given only if it isn't the questioner's own comment
@@ -100,6 +101,90 @@ router.put("/:comment_id/accept", middleware.checkQuestionOwnership, middleware.
       }
   });
 });
+
+
+//COMMENTS UPVOTE
+router.get("/:comment_id/upvote", middleware.isLoggedIn, function(req, res){
+	  Comment.findById(req.params.comment_id, function(err, foundComment){
+	      if (err){
+	    	  req.flash("error", "Oops... Something went wrong :(");
+	          res.redirect("back");
+	      } else {
+	    	  if (!req.user._id.equals(foundComment.author.id) && foundComment.upvoters.indexOf(req.user._id) == -1) { // user can't upvote own and already liked comment
+	    		  foundComment.upvoters.push(req.user); 
+	    		  
+	    		  // check if user already disliked and changed opinion
+	    		  var indexOfDownvoter = foundComment.downvoters.indexOf(req.user._id);
+	    		  if (indexOfDownvoter != -1) {
+	    			  foundComment.downvoters.splice(indexOfDownvoter, 1);
+	    		  }
+	    		  
+	    		  foundComment.save();
+	    	  }
+	    	  res.redirect("/questions/" + req.params.id);
+	      }
+	  });
+});
+
+
+//COMMENTS DOWNVOTE
+router.get("/:comment_id/downvote", middleware.isLoggedIn, function(req, res){
+	  Comment.findById(req.params.comment_id, function(err, foundComment){
+	      if (err){
+	    	  req.flash("error", "Oops... Something went wrong :(");
+	          res.redirect("back");
+	      } else {
+	    	  if (!req.user._id.equals(foundComment.author.id) && foundComment.downvoters.indexOf(req.user._id) == -1) { // user can't downvote own and already disliked comment
+	    		  foundComment.downvoters.push(req.user); 
+	    		  
+	    		  // check if user already liked and changed opinion
+	    		  var indexOfUpvoter = foundComment.upvoters.indexOf(req.user._id);
+	    		  if (indexOfUpvoter != -1) {
+	    			  foundComment.upvoters.splice(indexOfUpvoter, 1);
+	    		  }
+	    		  
+	    		  foundComment.save();
+	    	  }
+	    	  res.redirect("/questions/" + req.params.id);
+	      }
+	  });
+});
+
+
+//COMMENTS UN-UPVOTE
+router.get("/:comment_id/unupvote", middleware.isLoggedIn, function(req, res){
+	  Comment.findById(req.params.comment_id, function(err, foundComment){
+	      if (err){
+	    	  req.flash("error", "Oops... Something went wrong :(");
+	          res.redirect("back");
+	      } else {
+	    	  var indexOfUpvoter = foundComment.upvoters.indexOf(req.user._id);
+	    	  if (indexOfUpvoter != -1) {
+	    		  foundComment.upvoters.splice(indexOfUpvoter, 1);
+	    		  foundComment.save();
+	    	  }
+	    	  res.redirect("/questions/" + req.params.id);
+	      }
+	  });
+});
+
+//COMMENTS UN-DOWNVOTE
+router.get("/:comment_id/undownvote", middleware.isLoggedIn, function(req, res){
+	  Comment.findById(req.params.comment_id, function(err, foundComment){
+	      if (err){
+	    	  req.flash("error", "Oops... Something went wrong :(");
+	          res.redirect("back");
+	      } else {
+	    	  var indexOfDownvoter = foundComment.downvoters.indexOf(req.user._id);
+	    	  if (indexOfDownvoter != -1) {
+	    		  foundComment.downvoters.splice(indexOfDownvoter, 1);
+	    		  foundComment.save();
+	    	  }
+	    	  res.redirect("/questions/" + req.params.id);
+	      }
+	  });
+});
+
 
 //COMMENTS DESTROY
 router.delete("/:comment_id", middleware.checkCommentOwnership, function(req, res){
