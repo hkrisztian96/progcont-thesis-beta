@@ -81,18 +81,14 @@ router.put("/:comment_id/accept", middleware.checkQuestionOwnership, middleware.
       } else {
     	  if (!req.user._id.equals(updatedComment.author.id)) { // points given only if it isn't the questioner's own comment
     		  // found comment author's points
-	    	  var points;
 	    	  User.findById(updatedComment.author.id, function(err, foundUser){
 	    		  if (err){
 	    	            req.flash("error", "Something went wrong :(");
 	    	            return;
 	    	      } else {
-	    	            points = foundUser.points;
-	    		    	// increase comment author's points
-	    		    	User.findByIdAndUpdate(updatedComment.author.id, {points: ++points}, function(err, updatedUser){
-	    		    		if (err) 
-	    		    			req.flash("error", "Something went wrong :(");
-	    		    	});
+	    	    	  // increase comment author's points
+	    	    	  foundUser.points += 5;
+	    	    	  foundUser.save();
 	    	      }
 	    	  });
     	  }
@@ -115,9 +111,22 @@ router.get("/:comment_id/upvote", middleware.isLoggedIn, function(req, res){
 	    		  
 	    		  // check if user already disliked and changed opinion
 	    		  var indexOfDownvoter = foundComment.downvoters.indexOf(req.user._id);
+	    		  var pointsPlus = 2;
 	    		  if (indexOfDownvoter != -1) {
 	    			  foundComment.downvoters.splice(indexOfDownvoter, 1);
+	    			  pointsPlus = 5;
 	    		  }
+	    		  
+	    		  User.findById(foundComment.author.id, function(err, foundUser){
+		    		  if (err){
+		    	            req.flash("error", "Something went wrong :(");
+		    	            return;
+		    	      } else {
+		    	    	  // increase comment author's points
+		    	    	  foundUser.points += pointsPlus;
+		    	    	  foundUser.save();
+		    	      }
+		    	  });
 	    		  
 	    		  foundComment.save();
 	    	  }
@@ -139,9 +148,25 @@ router.get("/:comment_id/downvote", middleware.isLoggedIn, function(req, res){
 	    		  
 	    		  // check if user already liked and changed opinion
 	    		  var indexOfUpvoter = foundComment.upvoters.indexOf(req.user._id);
+	    		  var pointsMinus = 3;
 	    		  if (indexOfUpvoter != -1) {
 	    			  foundComment.upvoters.splice(indexOfUpvoter, 1);
+	    			  pointsMinus = 5;
 	    		  }
+	    		  
+	    		  User.findById(foundComment.author.id, function(err, foundUser){
+		    		  if (err){
+		    	            req.flash("error", "Something went wrong :(");
+		    	            return;
+		    	      } else {
+		    	    	  // decrease comment author's points
+		    	    	  if (foundUser.points - pointsMinus < 0)
+		    	    		  foundUser.points = 0;
+		    	    	  else
+		    	    		  foundUser.points -= pointsMinus;
+		    	    	  foundUser.save();
+		    	      }
+		    	  });
 	    		  
 	    		  foundComment.save();
 	    	  }
@@ -163,6 +188,21 @@ router.get("/:comment_id/unupvote", middleware.isLoggedIn, function(req, res){
 	    		  foundComment.upvoters.splice(indexOfUpvoter, 1);
 	    		  foundComment.save();
 	    	  }
+	    	  
+	    	  User.findById(foundComment.author.id, function(err, foundUser){
+	    		  if (err){
+	    	            req.flash("error", "Something went wrong :(");
+	    	            return;
+	    	      } else {
+	    	    	  // increase comment author's points
+	    	    	  if (foundUser.points - 2 < 0)
+	    	    		  foundUser.points = 0;
+	    	    	  else
+	    	    		  foundUser.points -= 2;
+	    	    	  foundUser.save();
+	    	      }
+	    	  });
+	    	  
 	    	  res.redirect("/questions/" + req.params.id);
 	      }
 	  });
@@ -180,6 +220,18 @@ router.get("/:comment_id/undownvote", middleware.isLoggedIn, function(req, res){
 	    		  foundComment.downvoters.splice(indexOfDownvoter, 1);
 	    		  foundComment.save();
 	    	  }
+	    	  
+	    	  User.findById(foundComment.author.id, function(err, foundUser){
+	    		  if (err){
+	    	            req.flash("error", "Something went wrong :(");
+	    	            return;
+	    	      } else {
+	    	    	  // increase comment author's points
+	    	    	  foundUser.points += 2;
+	    	    	  foundUser.save();
+	    	      }
+	    	  });
+	    	  
 	    	  res.redirect("/questions/" + req.params.id);
 	      }
 	  });
