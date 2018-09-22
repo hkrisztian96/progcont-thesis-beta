@@ -28,11 +28,17 @@
     .container {
         padding-top: 15%;
     }
+        .dropdown-item-color {
+    	color: white;
+    }
 }
 
 @media (max-width: 450px){
     .container{
         padding-top: 20%;
+    }
+    .dropdown-item-color {
+    	color: white;
     }
 }
 

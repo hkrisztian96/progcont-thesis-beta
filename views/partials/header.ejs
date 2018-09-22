@@ -37,7 +37,7 @@
 	                    <li><a href="/questions">Questions</a></li>
                     <% } %>
                 </ul>
-                <ul class="nav navbar-nav navbar-right mr-auto">
+                <ul class="nav navbar-nav navbar-right">
                     <% if (!currentUser){ %>
                     	<li class="nav-item"><a href="/register">Sign Up</a></li>
                         <li class="nav-item"><a href="/">Login</a></li>
@@ -47,11 +47,11 @@
 					          Signed in as <%= currentUser.username %>
 					        </a>
 					        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-					        	<p><a class="dropdown-item" href="/users/<%= currentUser._id %>/edit">Edit account</a></p>
-	                        	<p><a class="dropdown-item" href="/users/points">Points List</a></p>
+					        	<p><a class="dropdown-item dropdown-item-color" href="/users/<%= currentUser._id %>/edit">Edit account</a></p>
+	                        	<p><a class="dropdown-item dropdown-item-color" href="/users/points">Points List</a></p>
 						        <% if (currentUser.role == "ADMIN") { %>
-						        	 <hr class="dropdown-divider"></hr>
-			                    	 <p><a class="dropdown-item" href="/users/roles">Roles</a></p>
+						        	 <hr class="dropdown-divider dropdown-item-color"></hr>
+			                    	 <p><a class="dropdown-item dropdown-item-color" href="/users/roles">Roles</a></p>
 			                   	<% } %>
 					        </div>
 					    </li>
@@ -62,7 +62,7 @@
         </div>
     </nav>
     
-    <div class="container">
+    <div>
         <% if (error && error.length > 0) { %>
         <div class="alert alert-danger" role="alert">
             <%= error %>
