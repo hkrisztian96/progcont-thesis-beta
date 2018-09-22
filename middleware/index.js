@@ -106,4 +106,12 @@ middlewareObj.isCommentAccepted = function(req, res, next){
 	});
 }
 
+middlewareObj.isEditingOwnAccount = function(req, res, next){
+	if (!req.user._id.equals(req.params.id)) {
+		req.flash("error", "You are able to edit your own account only.");
+		res.redirect("back");
+	} else
+		return next();
+}
+
 module.exports = middlewareObj;

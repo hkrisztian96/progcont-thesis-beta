@@ -47,7 +47,7 @@
 					          Signed in as <%= currentUser.username %>
 					        </a>
 					        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-					        	<p><a class="dropdown-item dropdown-item-color" href="/users/<%= currentUser._id %>/edit">Edit account</a></p>
+					        	<p><a class="dropdown-item dropdown-item-color" href="/users/<%= currentUser._id %>/edit">Reset Password</a></p>
 	                        	<p><a class="dropdown-item dropdown-item-color" href="/users/points">Points List</a></p>
 						        <% if (currentUser.role == "ADMIN") { %>
 						        	 <hr class="dropdown-divider dropdown-item-color"></hr>
@@ -62,7 +62,7 @@
         </div>
     </nav>
     
-    <div>
+    <div class="container">
         <% if (error && error.length > 0) { %>
         <div class="alert alert-danger" role="alert">
             <%= error %>

@@ -143,3 +143,12 @@ h1 {
     font-size: 160%;
     padding-right: 2%;
 }
+
+.username-link {
+	color: black;
+}
+
+.username-link:hover {
+	font-weight: bold;
+	text-decoration: none;
+}

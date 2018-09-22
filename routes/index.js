@@ -82,6 +82,7 @@ router.put("/users/roles/:id", middleware.isAdmin, function(req, res) {
 	});
 });
 
+
 //show points page
 router.get("/users/points", middleware.isLoggedIn, function(req, res){
 	User.find({}, function(err, allUsers) {
@@ -91,6 +92,50 @@ router.get("/users/points", middleware.isLoggedIn, function(req, res){
 			return b.points - a.points;
 		});
 		res.render("users/points", {users: allUsers});
+	});
+});
+
+
+//show edit account page
+router.get("/users/:id/edit", middleware.isLoggedIn, function(req, res){
+	User.findById(req.user._id, function(err, foundReqUser) {
+		if (err) {
+			req.flash("error", "Something went wrong");
+			res.redirect("back");
+		} else {
+			User.findById(req.params.id, function(err, foundParamUser){
+				if (err) {
+					req.flash("error", "Something went wrong");
+					res.redirect("back");
+				} else {
+					res.render("users/edit", {user: foundReqUser, paramUser: foundParamUser});
+				}
+			});
+		}
+	});
+});
+
+
+//reset password
+router.put("/users/:id", middleware.isLoggedIn, middleware.isEditingOwnAccount, function(req, res){
+	User.findById(req.params.id, function(err, paramUser){
+		if (err) {
+			req.flash("error", "Something went wrong");
+			res.reditect("back");
+		} else {
+			if (req.body.user.new_password1 != req.body.user.new_password2){
+				req.flash("error", "The new passwords must match");
+				res.redirect("back");
+			} else
+				paramUser.changePassword(req.body.user.old_password, req.body.user.new_password1, function(err){
+					if (err) {
+						req.flash("error", "Wrong old password");
+						res.redirect("back");
+					}
+					req.flash("success", "Successfully changed password");
+					res.redirect("back");
+				});
+		}
 	});
 });
 
