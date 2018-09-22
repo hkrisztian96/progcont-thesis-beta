@@ -61,25 +61,38 @@ router.get("/logout", function(req, res) {
 });
 
 //show roles page
-router.get("/roles", middleware.isAdmin, function(req, res){
+router.get("/users/roles", middleware.isAdmin, function(req, res){
 	User.find({}, function(err, allUsers) {
 		if (err)
 			req.flash("error", "Something went wrong");
-		res.render("roles", {users: allUsers});
+		res.render("users/roles", {users: allUsers});
 	});
 });
 
 
 //change user role
-router.put("/roles/:id", middleware.isAdmin, function(req, res) {
+router.put("/users/roles/:id", middleware.isAdmin, function(req, res) {
 	User.findByIdAndUpdate(req.params.id, req.body.user, function(err, updatedUser){
 		if (err) {
 			req.flash("error", "Something went wrong");
 			return res.redirect("/roles");
 		} 
 		req.flash("success", "Successfully changed roles");
-		res.redirect("/roles");
+		res.redirect("/users/roles");
 	});
 });
+
+//show points page
+router.get("/users/points", middleware.isLoggedIn, function(req, res){
+	User.find({}, function(err, allUsers) {
+		if (err)
+			req.flash("error", "Something went wrong");
+		allUsers.sort((a,b) => {
+			return b.points - a.points;
+		});
+		res.render("users/points", {users: allUsers});
+	});
+});
+
 
 module.exports = router;

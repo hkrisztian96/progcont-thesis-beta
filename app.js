@@ -12,7 +12,7 @@ var express         = require("express"),
     LocalStrategy   = require("passport-local");
     
 var commentRoutes   = require("./routes/comments"),
-    questionRoutes      = require("./routes/questions"),
+    questionRoutes  = require("./routes/questions"),
     indexRoutes     = require("./routes/index");
     
 mongoose.connect("mongodb://localhost/progcont-qa");
