@@ -8,7 +8,12 @@ var moment = require("moment");
 
 //root route
 router.get("/", middleware.landingLogCheck,function(req, res){
-    res.render("landing");
+  res.redirect("/questions");
+});
+
+//login route
+router.get("/login", middleware.landingLogCheck,function(req, res){
+    res.render("login");
 });
 
 //handling login logic
@@ -49,7 +54,7 @@ router.post("/register", function(req, res) {
            return res.redirect("/register");
        }
        req.flash("success", "Successful Registration");
-       res.redirect("/");
+       res.redirect("/login");
    }); 
 });
 
@@ -57,7 +62,7 @@ router.post("/register", function(req, res) {
 router.get("/logout", function(req, res) {
    req.logout();
    req.flash("success", "Logged You Out");
-   res.redirect("/");
+   res.redirect("back");
 });
 
 //show roles page

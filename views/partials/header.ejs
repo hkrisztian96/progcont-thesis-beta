@@ -22,25 +22,21 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <% if (currentUser) { %>
-                    <a href="/questions" class="navbar-brand">Progcont Questions&Answers</a>
-                <% } else { %>
-                    <a href="/" class="navbar-brand">Progcont Questions&Answers</a>
-                <% } %>
+                <a href="/questions" class="navbar-brand">Progcont Questions&Answers</a>
             </div>
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav navbar-left" style="padding-left: 5%">
                     <% if (currentUser) { %>
 	                    <li><a href="/questions/new">New</a></li>
-	                    <li><a href="/questions/solved">Solved</a></li>
 	                    <li><a href="/questions/deleted">QBin</a></li>
-	                    <li><a href="/questions">Questions</a></li>
                     <% } %>
+                    <li><a href="/questions/solved">Solved</a></li>
+                    <li><a href="/questions">Questions</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <% if (!currentUser){ %>
                     	<li class="nav-item"><a href="/register">Sign Up</a></li>
-                        <li class="nav-item"><a href="/">Login</a></li>
+                        <li class="nav-item"><a href="/login">Login</a></li>
                     <% } else { %>
 	                    <li class="nav-item dropdown">
 					        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

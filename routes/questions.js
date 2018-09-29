@@ -5,7 +5,7 @@ var middleware = require("../middleware/index");
 var moment = require("moment");
 
 //INDEX QUESTION
-router.get("/", middleware.isLoggedIn, function(req, res){
+router.get("/", function(req, res){
     
   // Get all questions from DB
     Question.find({isSolved: false, expiration_date: null}, function(err, allQuestions){
@@ -39,7 +39,7 @@ router.get("/deleted", middleware.isLoggedIn, function(req, res){
 });
 
 //INDEX - Solved
-router.get("/solved", middleware.isLoggedIn, function(req, res){
+router.get("/solved", function(req, res){
 
 	  // Get all questions from DB
 	    Question.find({isSolved: true, expiration_date: null}, function(err, allQuestions){
@@ -68,7 +68,6 @@ router.post("/", middleware.isLoggedIn, function(req, res){
     Question.create(newQuestion, function(err, newlyCreated){
         if(err){
             req.flash("error", err.message);
-            console.log(err);
         } else {
             req.flash("success", "Successfully added question");
             //redirect back to questions page
@@ -83,7 +82,7 @@ router.get("/new", middleware.isLoggedIn, function(req, res) {
 });
 
 // SHOW - shows more info about one question
-router.get("/:id", middleware.isLoggedIn, function(req, res){
+router.get("/:id", function(req, res){
     //find the question with provided ID
     Question.findById(req.params.id).populate("comments").exec(function(err, foundQuestion){
         if(err){
