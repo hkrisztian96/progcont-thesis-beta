@@ -88,8 +88,38 @@ router.get("/:id", function(req, res){
         if(err){
             req.flash("error", "Something went wrong");
         } else {
+        	var comments = [];
+        	for (var i= 0; i < foundQuestion.comments.length; i++) {
+        		var comment = foundQuestion.comments[i];
+        		var parts = comment.text.split(/<code|\/code>/g);
+        		var commentParts = [];
+        		
+        		for (var j= 0; j < parts.length; j++) {
+        			if (parts[j].startsWith(">") && parts[j].endsWith("<")) {
+        				var commentObj = {
+        						text: parts[j].replace(/<|>/g,''),
+        						code: true
+        				}
+        			} else {
+        				var commentObj = {
+        						text: parts[j],
+        						code: false
+        				}
+        			}
+        			commentParts.push(commentObj);
+        		}
+        		comments.push({
+        			author: comment.author,
+        			upvoters: comment.upvoters,
+        			downvoters: comment.downvoters,
+        			_id: comment._id,
+        			date: comment.date,
+        			isAccepted: comment.isAccepted,
+        			text: commentParts
+        		});
+        	}
             //render show template with that question
-            res.render("questions/show", {question: foundQuestion});
+            res.render("questions/show", {question: foundQuestion, comments: comments});
         }
     });
 });
