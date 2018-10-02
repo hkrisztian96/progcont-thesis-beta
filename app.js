@@ -15,8 +15,8 @@ var commentRoutes   = require("./routes/comments"),
     questionRoutes  = require("./routes/questions"),
     indexRoutes     = require("./routes/index");
     
-mongoose.connect("mongodb://localhost/progcont-qa");
-//mongoose.connect(process.env.DATABASEURL);
+//mongoose.connect("mongodb://localhost/progcont-qa");
+mongoose.connect(process.env.DATABASEURL);
 
 
 app.use(bodyParser.urlencoded({extended: true}));
