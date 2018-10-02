@@ -52,6 +52,6 @@ app.use("/", indexRoutes);
 app.use("/questions/:id/comments", commentRoutes);
 app.use("/questions", questionRoutes);
 
-app.listen("8181", process.env.IP, function(){
+app.listen(process.env.PORT, process.env.IP, function(){
    console.log("The Server Has Started!");
 });
