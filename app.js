@@ -27,7 +27,7 @@ app.use(flash());
 
 // //PASSPORT CONFIGURATION
 app.use(require("express-session")({
-    secret: "hunchemprotect",
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false
 }));

@@ -13,7 +13,7 @@
 			    <form class="omb_loginForm" action="/register" autocomplete="off" method="POST">
 					<div class="input-group">
 						<span class="input-group-addon"><i class="fa fa-user"></i></span>
-						<input type="text" class="form-control" name="username" placeholder="Username" autocomplete="off" required>
+						<input id="username" type="text" class="form-control" name="username" placeholder="Username" autocomplete="off" required>
 					</div>
 					<span class="help-block"></span>
 										
@@ -32,5 +32,16 @@
 
 
 </div>
+
+<script type="text/javascript">
+	document.querySelector('#username').onkeypress = validate;
+	
+	function validate(e) {
+	        e = e || event;
+	        return /[a-z0-9]/i.test(
+	                   String.fromCharCode(e.charCode || e.keyCode)
+	               ) || !e.charCode && e.keyCode  < 48;
+	}
+</script>
 
 <% include partials/footer %>
