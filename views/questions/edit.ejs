@@ -12,13 +12,14 @@
                     <input type="url" class="form-control" name="question[link]" placeholder="Exiration Date" value="<%= question.link %>" ></input>
                 </div>
                 <div class="form-group">
-                    <textarea onkeyup="AutoGrowTextArea(this)" type="text" class="form-control" name="question[code]" placeholder="Description"><%= question.code %></textarea>
+                    <textarea id="question-area" onkeyup="AutoGrowTextArea(this)" type="text" class="form-control" name="question[code]" placeholder="Description"><%= question.code %></textarea>
                 </div>
                 <div class="form-group">
                     <button class="btn btn-lg btn-primary btn-block">Submit</button>
                 </div>
             </form>
              <a href="javascript:history.back()">Go Back</a>
+             <a id="insert-code" style="float: right;" onclick="insertAtCaret('question-area', '<code>\n</code>');return false;">Insert code</a>
         </div>
     </div>
 </div>

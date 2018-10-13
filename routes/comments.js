@@ -73,7 +73,7 @@ router.put("/:comment_id", middleware.checkCommentOwnership, function(req, res){
 
 
 //COMMENTS ACCEPT
-router.put("/:comment_id/accept", middleware.checkQuestionOwnership, middleware.isCommentAccepted, function(req, res){
+router.put("/:comment_id/accept", middleware.checkQuestionOwnership, middleware.isCommentAcceptable, function(req, res){
   Comment.findByIdAndUpdate(req.params.comment_id, {isAccepted: true}, function(err, updatedComment){
       if (err){
     	  req.flash("error", "Oops... Something went wrong :(");
@@ -96,6 +96,32 @@ router.put("/:comment_id/accept", middleware.checkQuestionOwnership, middleware.
           res.redirect("/questions/" + req.params.id);
       }
   });
+});
+
+//COMMENTS UNDO ACCEPT
+router.put("/:comment_id/unaccept", middleware.checkQuestionOwnership, middleware.isCommentUnacceptable, function(req, res){
+	Comment.findByIdAndUpdate(req.params.comment_id, {isAccepted: false}, function(err, updatedComment){
+	    if (err){
+	  	  req.flash("error", "Oops... Something went wrong :(");
+	        res.redirect("back");
+	    } else {
+	  	  if (!req.user._id.equals(updatedComment.author.id)) { // points decreased only if it isn't the questioner's own comment
+	  		  // found comment author's points
+		    	  User.findById(updatedComment.author.id, function(err, foundUser){
+		    		  if (err){
+		    	            req.flash("error", "Something went wrong :(");
+		    	            return;
+		    	      } else {
+		    	    	  // increase comment author's points
+		    	    	  foundUser.points -= 5;
+		    	    	  foundUser.save();
+		    	      }
+		    	  });
+	  	  }
+	  	  req.flash("success", "Successfully undid comment acceptance");
+	        res.redirect("/questions/" + req.params.id);
+	    }
+	});
 });
 
 

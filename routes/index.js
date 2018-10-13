@@ -22,11 +22,11 @@ router.post("/", function(req, res, next) {
     if (err) { 
         req.flash("error", err.message);
         console.log(err);
-        return res.redirect("/");
+        return res.redirect("/login");
     }
     if (!user) { 
         req.flash("error", "Wrong username or password");
-        return res.redirect("/");
+        return res.redirect("/login");
     }
     req.logIn(user, function(err) {
       if (err) { 

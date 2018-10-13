@@ -54,16 +54,16 @@ router.get("/solved", function(req, res){
 //CREATE QUESTION
 router.post("/", middleware.isLoggedIn, function(req, res){
   // get data from form and add to questions array
-    var questionString = req.body.questionString;
+    var title = req.body.title;
     var link = req.body.link;
-    var code = req.body.code;
+    var questionString = req.body.questionString;
     var isSolved = false;
     var expiration_date = null;
     var author = {
         id: req.user._id,
         username: req.user.username
     }
-    var newQuestion = {questionString: questionString, link: link, code: code, isSolved: isSolved, expiration_date: expiration_date,  author: author};
+    var newQuestion = {title: title, link: link, questionString: questionString, isSolved: isSolved, expiration_date: expiration_date,  author: author};
     // Create a new question and save to DB
     Question.create(newQuestion, function(err, newlyCreated){
         if(err){
@@ -88,6 +88,33 @@ router.get("/:id", function(req, res){
         if(err){
             req.flash("error", "Something went wrong");
         } else {
+        	var questionStringParts = foundQuestion.questionString.split(/<code|\/code>/g);
+        	var insideParts = [];
+        	for (var j= 0; j < questionStringParts.length; j++) {
+    			if (questionStringParts[j].startsWith(">") && questionStringParts[j].endsWith("<")) {
+    				var questionStringObj = {
+    						text: questionStringParts[j].replace(/<|>/g,''),
+    						code: true
+    				}
+    			} else {
+    				var questionStringObj = {
+    						text: questionStringParts[j],
+    						code: false
+    				}
+    			}
+    			insideParts.push(questionStringObj);
+    		}
+        	var question = {
+        		_id: foundQuestion._id,
+        		title: foundQuestion.title,
+        		link: foundQuestion.link,
+        		isSolved: foundQuestion.isSolved,
+        		expiration_date: foundQuestion.expiration_date,
+        		author: foundQuestion.author,
+        		comments: foundQuestion.comments,
+        		questionString: insideParts
+        	};
+        	
         	var comments = [];
         	for (var i= 0; i < foundQuestion.comments.length; i++) {
         		var comment = foundQuestion.comments[i];
@@ -119,7 +146,7 @@ router.get("/:id", function(req, res){
         		});
         	}
             //render show template with that question
-            res.render("questions/show", {question: foundQuestion, comments: comments});
+            res.render("questions/show", {question: question, comments: comments});
         }
     });
 });

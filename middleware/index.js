@@ -8,7 +8,7 @@ middlewareObj.checkQuestionOwnership = function(req, res, next){
            if (err){
                res.redirect("back");
            } else {
-               if (foundQuestion.author.id.equals(req.user._id)){
+               if (foundQuestion.author.id.equals(req.user._id) || (req.isAuthenticated() && req.user.role === "ADMIN")){
                    next();
                } else {
                    req.flash("error", "You don't have permission to do that");
@@ -30,7 +30,7 @@ middlewareObj.checkCommentOwnership = function(req, res, next){
                req.flash("error", "Question Not Found");
                res.redirect("back");
            } else {
-               if (foundComment.author.id.equals(req.user._id)){
+               if (foundComment.author.id.equals(req.user._id) || (req.isAuthenticated() && req.user.role === "ADMIN")){
                    next();
                } else {
                    req.flash("error", "You don't have permission to do that");
@@ -93,7 +93,7 @@ middlewareObj.isSolved = function(req, res, next){
 	});	
 }
 
-middlewareObj.isCommentAccepted = function(req, res, next){
+middlewareObj.isCommentAcceptable = function(req, res, next){
 	Comment.findById(req.params.comment_id, function(err, foundComment){
 		if (err) {
 			req.flash("error", "Something went wrong :(");
@@ -101,6 +101,19 @@ middlewareObj.isCommentAccepted = function(req, res, next){
 			if (foundComment.isAccepted == false)
 				return next();
 			req.flash("error", "This comment is already marked as accepted");
+			res.redirect("back");
+		}
+	});
+}
+
+middlewareObj.isCommentUnacceptable = function(req, res, next){
+	Comment.findById(req.params.comment_id, function(err, foundComment){
+		if (err) {
+			req.flash("error", "Something went wrong :(");
+		} else {
+			if (foundComment.isAccepted == true)
+				return next();
+			req.flash("error", "This comment isn't marked as accepted");
 			res.redirect("back");
 		}
 	});

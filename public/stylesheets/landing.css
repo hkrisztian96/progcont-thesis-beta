@@ -160,3 +160,7 @@ h1 {
 	font-weight: bold;
 	text-decoration: none;
 }
+
+input[type="text"]:disabled {
+    cursor: auto;
+}

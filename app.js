@@ -15,8 +15,8 @@ var commentRoutes   = require("./routes/comments"),
     questionRoutes  = require("./routes/questions"),
     indexRoutes     = require("./routes/index");
     
-//mongoose.connect("mongodb://localhost/progcont-qa");
-mongoose.connect(process.env.DATABASEURL);
+mongoose.connect("mongodb://localhost/progcont-qa");
+//mongoose.connect(process.env.DATABASEURL);
 
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -27,7 +27,7 @@ app.use(flash());
 
 // //PASSPORT CONFIGURATION
 app.use(require("express-session")({
-    secret: process.env.SECRET,
+    secret: "asd",
     resave: false,
     saveUninitialized: false
 }));
@@ -52,6 +52,6 @@ app.use("/", indexRoutes);
 app.use("/questions/:id/comments", commentRoutes);
 app.use("/questions", questionRoutes);
 
-app.listen(process.env.PORT, process.env.IP, function(){
+app.listen("8181", process.env.IP, function(){
    console.log("The Server Has Started!");
 });

@@ -1,9 +1,9 @@
 var mongoose = require("mongoose");
 
 var questionSchema = new mongoose.Schema({
-   questionString: String,
+   title: String,
    link: String,
-   code: String,
+   questionString: String,
    isSolved: Boolean,
    expiration_date: Date,
    author: {
