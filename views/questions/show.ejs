@@ -67,12 +67,12 @@
 	                          	<form id="accept-comment" action="/questions/<%= question._id %>/comments/<%= comment._id %>/accept?_method=PUT" method="POST">                                   
 	                             	<span class="pull-left" style="margin-right: 4px;"><button class="comment-btn-margin btn btn-xs btn-success">Accept</button></span>
                                  </form>
-	                          <% } else if (currentUser && (question.author.id.equals(currentUser._id) || currentUser.role == "ADMIN") && comment.isAccepted == true) { %>
+	                          <% } else if (currentUser && (comment.author.id.equals(currentUser._id) || currentUser.role == "ADMIN") && comment.isAccepted == true) { %>
 	                          	<form id="accept-comment" action="/questions/<%= question._id %>/comments/<%= comment._id %>/unaccept?_method=PUT" method="POST">                                   
 	                             	<span class="pull-left" style="margin-right: 4px;"><button class="comment-btn-margin btn btn-xs btn-success">Undo Accept</button></span>
                                  </form>
 	                          <% } %>
-	                          <% if (currentUser && (question.author.id.equals(currentUser._id) ||currentUser.role == "ADMIN")){ %>
+	                          <% if (currentUser && (comment.author.id.equals(currentUser._id) ||currentUser.role == "ADMIN")){ %>
 		                         <a class="comment-btn-margin btn btn-xs btn-warning" href="/questions/<%= question._id %>/comments/<%= comment._id %>/edit">Edit</a>
 	                             <form id="delete-comment" action="/questions/<%= question._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">                                   
 	                             	<button class="comment-btn-margin btn btn-xs btn-danger">Delete</button>
